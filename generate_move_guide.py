@@ -7,6 +7,19 @@ def read(rel): return (ROOT / rel).read_text(errors='ignore')
 def clean_name(s): return s.replace('$$$$$$','').replace('$','').strip()
 def title_from_const(s): return s.replace('_',' ').title().replace('Tm','TM').replace('Hm','HM')
 
+FLAG_LABELS = {
+    'F_AFFECTED_BY_KINGS_ROCK': '부가효과: 왕의징표석',
+    'F_AFFECTED_BY_PROTECT': '방어 적용',
+    'F_MIRROR_MOVE_COMPATIBLE': '따라하기 가능',
+    'F_MAKES_CONTACT': '접촉기',
+    'F_AFFECTED_BY_MAGIC_COAT': '매직코트 반사',
+    'F_AFFECTED_BY_SNATCH': '가로챔 가능',
+    'F_AFFECTED_BY_BRIGHT_POWDER': '반짝가루 영향',
+}
+
+def flag_label(flag):
+    return FLAG_LABELS.get(flag, flag.replace('F_', '').replace('_', ' ').title())
+
 moves_h = read('include/constants/moves.h')
 move_ids = {m.group(1): int(m.group(2)) for m in re.finditer(r'#define\s+(MOVE_[A-Z0-9_]+)\s+(\d+)', moves_h)}
 move_by_id = {v:k for k,v in move_ids.items()}
@@ -128,7 +141,7 @@ for m in re.finditer(r'\[(MOVE_[A-Z0-9_]+)\]\s*=\s*\{(.*?)\n\s*\},', text, re.S)
         'power': fields.get('power','0').strip(), 'accuracy': fields.get('accuracy','0').strip(), 'pp': fields.get('pp','0').strip(),
         'effect': fields.get('effect','').replace('EFFECT_','').strip(), 'chance': fields.get('secondaryEffectChance','0').strip(),
         'target': fields.get('target','').replace('TARGET_','').replace('MOVE_TARGET_','').strip(), 'priority': fields.get('priority','0').strip(),
-        'flags': [f.replace('F_','') for f in flags], 'learners': [], 'obtain': []
+        'flags': [flag_label(f) for f in flags], 'learners': [], 'obtain': []
     }
 
 # Level-up learnsets via pointer table.

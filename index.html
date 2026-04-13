@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruby/Sapphire Notes Hub</title>
+<style>
+:root{--ink:#1e211c;--muted:#687162;--line:#d7decd;--card:#fffef8;--leaf:#2f6f4e;--ruby:#b51f2a;--sapphire:#1d5eaa}
+*{box-sizing:border-box} body{margin:0;min-height:100vh;font:15px/1.45 -apple-system,BlinkMacSystemFont,'SF Pro Text','Apple SD Gothic Neo','Noto Sans KR','Helvetica Neue',sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 0,#f6d4c4 0,transparent 28%),radial-gradient(circle at 90% 4%,#cfe4ff 0,transparent 30%),linear-gradient(135deg,#fffaf0,#edf5ed);-webkit-font-smoothing:antialiased} main{max-width:1040px;margin:0 auto;padding:44px 18px 72px}.eyebrow{display:inline-flex;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,254,248,.86);color:var(--muted);font-size:12px;font-weight:900}h1{margin:18px 0 0;font-size:42px;letter-spacing:-.05em;line-height:1.05}p{margin:10px 0 0;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:30px}.card{position:relative;display:grid;gap:12px;min-height:210px;padding:22px;border:1px solid var(--line);border-radius:24px;background:rgba(255,254,248,.92);box-shadow:0 18px 42px rgba(42,60,35,.1);color:inherit;text-decoration:none;overflow:hidden;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}.card:hover{transform:translateY(-4px);box-shadow:0 24px 58px rgba(42,60,35,.16);border-color:rgba(47,111,78,.38)}.card:before{content:'';position:absolute;inset:auto -20% -42% 34%;height:180px;border-radius:999px;opacity:.16;transform:rotate(-12deg)}.card.dex:before{background:linear-gradient(90deg,var(--ruby),var(--sapphire))}.card.moves:before{background:linear-gradient(90deg,#78c850,#6890f0)}.kicker{color:var(--leaf);font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.title{font-size:26px;font-weight:950;letter-spacing:-.035em}.desc{max-width:34em}.open{align-self:end;display:inline-flex;width:max-content;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:#eef4e7;color:#2f513f;font-size:13px;font-weight:950}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}.pill{padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,254,248,.84);color:var(--muted);font-size:12px;font-weight:850}@media(max-width:760px){h1{font-size:34px}.grid{grid-template-columns:1fr}.card{min-height:180px}}
+</style>
+</head>
+<body>
+<main>
+  <span class="eyebrow">Ruby/Sapphire Notes</span>
+  <h1>공략 자료 허브</h1>
+  <p>자주 보는 문서를 여기서 바로 열 수 있게 모았습니다.</p>
+  <section class="grid" aria-label="note links">
+    <a class="card dex" href="hoenn-pokedex-checklist.html">
+      <span class="kicker">Pokedex</span>
+      <span class="title">호연도감 체크리스트</span>
+      <span class="desc">루비/사파이어 수집 체크, 버전 전용/쉬움, 타입 상성, 기본 능력치 참고.</span>
+      <span class="open">열기</span>
+    </a>
+    <a class="card moves" href="ruby-sapphire-move-guide.html">
+      <span class="kicker">Moves</span>
+      <span class="title">기술 가이드</span>
+      <span class="desc">기술별 검색, 포켓몬별 습득 기술, TM/HM 획득처와 비소모 HM 구분.</span>
+      <span class="open">열기</span>
+    </a>
+  </section>
+  <div class="meta"><span class="pill">로컬 HTML</span><span class="pill">같은 폴더 상대 링크</span></div>
+</main>
+</body>
+</html>

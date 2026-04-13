@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pokemon Ruby/Sapphire Version Differences</title>
+<style>
+:root { --bg:#f8f3e8; --ink:#222; --muted:#6f6658; --line:#d8cbb9; --ruby:#b51f2a; --sapphire:#1e5aa8; --card:#fffaf0; }
+body { margin:0; font:16px/1.55 Georgia, 'Noto Serif KR', serif; color:var(--ink); background:linear-gradient(135deg,#fffaf0,#edf5ff 55%,#fff1f1); }
+main { max-width:1180px; margin:0 auto; padding:40px 20px 64px; }
+h1 { font-size:34px; margin:0 0 8px; letter-spacing:-0.03em; }
+h2 { margin:36px 0 12px; font-size:24px; }
+p { color:var(--muted); margin:8px 0 16px; }
+.note { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+table { width:100%; border-collapse:collapse; background:rgba(255,250,240,.88); border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(67,43,18,.08); }
+th, td { padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; text-align:left; }
+th { position:sticky; top:0; background:#efe3d0; font-weight:700; }
+tr:last-child td { border-bottom:0; }
+.ruby { color:var(--ruby); font-weight:700; }
+.sapphire { color:var(--sapphire); font-weight:700; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media (max-width:800px) { .grid { grid-template-columns:1fr; } table { font-size:14px; } th,td { padding:8px; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Pokemon Ruby/Sapphire 출현 차이표</h1>
+<p class="note">기준 데이터: <code>pokeruby/src/data/wild_encounters.json</code>. 확률은 해당 방식의 조우 테이블 안에서 슬롯이 선택될 확률이며, 지역의 전체 조우율까지 곱한 값은 아니다. 고정/로밍/이벤트 포켓몬은 야생 출현표와 분리했다. Latios/Latias 로밍은 `include/constants/species.h`의 `ROAMER_SPECIES` 매크로와 `data/scripts/tv.inc` 기준으로 보강했다.</p>
+
+<h2>고정 이벤트 버전 한정</h2>
+<table><thead><tr><th>포켓몬</th><th>버전</th><th>비고</th></tr></thead><tbody>
+<tr><td>Groudon</td><td class="ruby">Ruby</td><td>Cave of Origin / story static encounter / Lv.45</td></tr>
+<tr><td>Kyogre</td><td class="sapphire">Sapphire</td><td>Cave of Origin / story static encounter / Lv.45</td></tr>
+<tr><td>Latios</td><td class="ruby">Ruby</td><td>Post-game roaming Pokemon. Triggered by TV after Hall of Fame.</td></tr>
+<tr><td>Latias</td><td class="sapphire">Sapphire</td><td>Post-game roaming Pokemon. Triggered by TV after Hall of Fame.</td></tr>
+<tr><td>Latias</td><td class="ruby">Ruby</td><td>Southern Island Eon Ticket event / Lv.50 / Soul Dew. This is the opposite Lati from the roaming one.</td></tr>
+<tr><td>Latios</td><td class="sapphire">Sapphire</td><td>Southern Island Eon Ticket event / Lv.50 / Soul Dew. This is the opposite Lati from the roaming one.</td></tr>
+</tbody></table>
+
+<h2>야생 출현 버전 한정</h2>
+<div class="grid">
+<section><h2 class="ruby">Ruby Only</h2><table><thead><tr><th>포켓몬</th><th>버전</th><th>가장 높은 출현 위치</th></tr></thead><tbody>
+<tr><td>Dusclops</td><td>Ruby</td><td>SkyPillar 1F / 풀숲/동굴 / Lv.48 / 10%<br>SkyPillar 3F / 풀숲/동굴 / Lv.51 / 10%<br>SkyPillar 5F / 풀숲/동굴 / Lv.54 / 10%</td></tr>
+<tr><td>Mawile</td><td>Ruby</td><td>VictoryRoad B2F / 풀숲/동굴 / Lv.40 / 20%<br>SkyPillar 1F / 풀숲/동굴 / Lv.48 / 20%<br>SkyPillar 3F / 풀숲/동굴 / Lv.51 / 20%<br>SkyPillar 5F / 풀숲/동굴 / Lv.54 / 20%</td></tr>
+<tr><td>Nuzleaf</td><td>Ruby</td><td>Route114 / 풀숲/동굴 / Lv.16 / 5%<br>Route114 / 풀숲/동굴 / Lv.18 / 5%</td></tr>
+<tr><td>Seedot</td><td>Ruby</td><td>Route114 / 풀숲/동굴 / Lv.16 / 20%</td></tr>
+<tr><td>Solrock</td><td>Ruby</td><td>MeteorFalls 1F 1R / 풀숲/동굴 / Lv.16 / 10%<br>MeteorFalls 1F 2R / 풀숲/동굴 / Lv.35 / 10%<br>MeteorFalls 1F 2R / 풀숲/동굴 / Lv.33 / 10%<br>MeteorFalls 1F 2R / 풀숲/동굴 / Lv.37 / 10%</td></tr>
+<tr><td>Zangoose</td><td>Ruby</td><td>Route114 / 풀숲/동굴 / Lv.16 / 10%</td></tr>
+</tbody></table></section>
+<section><h2 class="sapphire">Sapphire Only</h2><table><thead><tr><th>포켓몬</th><th>버전</th><th>가장 높은 출현 위치</th></tr></thead><tbody>
+<tr><td>Banette</td><td>Sapphire</td><td>SkyPillar 1F / 풀숲/동굴 / Lv.48 / 10%<br>SkyPillar 3F / 풀숲/동굴 / Lv.51 / 10%<br>SkyPillar 5F / 풀숲/동굴 / Lv.54 / 10%</td></tr>
+<tr><td>Lombre</td><td>Sapphire</td><td>Route114 / 풀숲/동굴 / Lv.16 / 5%<br>Route114 / 풀숲/동굴 / Lv.18 / 5%</td></tr>
+<tr><td>Lotad</td><td>Sapphire</td><td>Route114 / 풀숲/동굴 / Lv.16 / 20%</td></tr>
+<tr><td>Lunatone</td><td>Sapphire</td><td>MeteorFalls 1F 1R / 풀숲/동굴 / Lv.16 / 10%<br>MeteorFalls 1F 2R / 풀숲/동굴 / Lv.35 / 10%<br>MeteorFalls 1F 2R / 풀숲/동굴 / Lv.33 / 10%<br>MeteorFalls 1F 2R / 풀숲/동굴 / Lv.37 / 10%</td></tr>
+<tr><td>Sableye</td><td>Sapphire</td><td>VictoryRoad B2F / 풀숲/동굴 / Lv.40 / 20%<br>SkyPillar 1F / 풀숲/동굴 / Lv.48 / 20%<br>SkyPillar 3F / 풀숲/동굴 / Lv.51 / 20%<br>SkyPillar 5F / 풀숲/동굴 / Lv.54 / 20%</td></tr>
+<tr><td>Seviper</td><td>Sapphire</td><td>Route114 / 풀숲/동굴 / Lv.16 / 10%</td></tr>
+</tbody></table></section>
+</div>
+
+<h2>양쪽 모두 나오지만 한 버전에서 최고 출현률이 더 높은 포켓몬</h2>
+<table><thead><tr><th>포켓몬</th><th>유리한 버전</th><th>Ruby 최고</th><th>Sapphire 최고</th><th>Ruby 추천 위치</th><th>Sapphire 추천 위치</th></tr></thead><tbody>
+<tr><td>Grimer</td><td class="sapphire">Sapphire</td><td>1%</td><td>20%</td><td>FieryPath / 풀숲/동굴 / Lv.14 / 1%<br>FieryPath / 풀숲/동굴 / Lv.14 / 1%</td><td>FieryPath / 풀숲/동굴 / Lv.15 / 20%</td></tr>
+<tr><td>Koffing</td><td class="ruby">Ruby</td><td>20%</td><td>1%</td><td>FieryPath / 풀숲/동굴 / Lv.15 / 20%</td><td>FieryPath / 풀숲/동굴 / Lv.14 / 1%<br>FieryPath / 풀숲/동굴 / Lv.14 / 1%</td></tr>
+<tr><td>Duskull</td><td class="ruby">Ruby</td><td>20%</td><td>5%</td><td>MtPyre 1F / 풀숲/동굴 / Lv.27 / 20%<br>MtPyre 1F / 풀숲/동굴 / Lv.28 / 20%<br>MtPyre 2F / 풀숲/동굴 / Lv.27 / 20%<br>MtPyre 2F / 풀숲/동굴 / Lv.28 / 20%</td><td>MtPyre Summit / 풀숲/동굴 / Lv.28 / 5%</td></tr>
+<tr><td>Shuppet</td><td class="sapphire">Sapphire</td><td>5%</td><td>20%</td><td>MtPyre Summit / 풀숲/동굴 / Lv.28 / 5%</td><td>MtPyre 1F / 풀숲/동굴 / Lv.27 / 20%<br>MtPyre 1F / 풀숲/동굴 / Lv.28 / 20%<br>MtPyre 2F / 풀숲/동굴 / Lv.27 / 20%<br>MtPyre 2F / 풀숲/동굴 / Lv.28 / 20%</td></tr>
+<tr><td>Minun</td><td class="ruby">Ruby</td><td>10%</td><td>1%</td><td>Route110 / 풀숲/동굴 / Lv.13 / 10%</td><td>Route110 / 풀숲/동굴 / Lv.12 / 1%<br>Route110 / 풀숲/동굴 / Lv.13 / 1%</td></tr>
+<tr><td>Plusle</td><td class="sapphire">Sapphire</td><td>1%</td><td>10%</td><td>Route110 / 풀숲/동굴 / Lv.12 / 1%<br>Route110 / 풀숲/동굴 / Lv.13 / 1%</td><td>Route110 / 풀숲/동굴 / Lv.13 / 10%</td></tr>
+<tr><td>Illumise</td><td class="ruby">Ruby</td><td>5%</td><td>1%</td><td>Route117 / 풀숲/동굴 / Lv.13 / 5%<br>Route117 / 풀숲/동굴 / Lv.13 / 5%</td><td>Route117 / 풀숲/동굴 / Lv.13 / 1%</td></tr>
+<tr><td>Volbeat</td><td class="sapphire">Sapphire</td><td>1%</td><td>5%</td><td>Route117 / 풀숲/동굴 / Lv.13 / 1%</td><td>Route117 / 풀숲/동굴 / Lv.13 / 5%<br>Route117 / 풀숲/동굴 / Lv.13 / 5%</td></tr>
+</tbody></table>
+</main>
+</body>
+</html>

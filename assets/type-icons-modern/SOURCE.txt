@@ -1,0 +1,2 @@
+Pokemon type SVG icons from https://github.com/partywhale/pokemon-type-icons
+License: MIT, Copyright (c) 2022 James Watkins

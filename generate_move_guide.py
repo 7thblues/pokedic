@@ -20,6 +20,20 @@ FLAG_LABELS = {
 def flag_label(flag):
     return FLAG_LABELS.get(flag, flag.replace('F_', '').replace('_', ' ').title())
 
+TARGET_LABELS = {
+    'TARGET_SELECTED_POKEMON': '선택한 1마리',
+    'TARGET_SPECIAL': '특수 대상',
+    'TARGET_UNK2': '특수 대상',
+    'TARGET_RANDOM': '무작위 1마리',
+    'TARGET_BOTH_ENEMIES': '상대 전체',
+    'TARGET_USER': '자신',
+    'TARGET_ALL_EXCEPT_USER': '자신 제외 전체',
+    'TARGET_ENEMY_SIDE': '상대 필드',
+}
+
+def target_label(target):
+    return TARGET_LABELS.get(target, target.replace('TARGET_', '').replace('MOVE_TARGET_', '').replace('_', ' ').title())
+
 moves_h = read('include/constants/moves.h')
 move_ids = {m.group(1): int(m.group(2)) for m in re.finditer(r'#define\s+(MOVE_[A-Z0-9_]+)\s+(\d+)', moves_h)}
 move_by_id = {v:k for k,v in move_ids.items()}
@@ -140,7 +154,7 @@ for m in re.finditer(r'\[(MOVE_[A-Z0-9_]+)\]\s*=\s*\{(.*?)\n\s*\},', text, re.S)
         'type': typ, 'category': 'Status' if fields.get('power','0').strip() == '0' else ('Physical' if typ in {'NORMAL','FIGHTING','POISON','GROUND','FLYING','BUG','ROCK','GHOST','STEEL'} else 'Special'),
         'power': fields.get('power','0').strip(), 'accuracy': fields.get('accuracy','0').strip(), 'pp': fields.get('pp','0').strip(),
         'effect': fields.get('effect','').replace('EFFECT_','').strip(), 'chance': fields.get('secondaryEffectChance','0').strip(),
-        'target': fields.get('target','').replace('TARGET_','').replace('MOVE_TARGET_','').strip(), 'priority': fields.get('priority','0').strip(),
+        'target': target_label(fields.get('target','').strip()), 'priority': fields.get('priority','0').strip(),
         'flags': [flag_label(f) for f in flags], 'learners': [], 'obtain': []
     }
 

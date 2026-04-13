@@ -34,6 +34,218 @@ TARGET_LABELS = {
 def target_label(target):
     return TARGET_LABELS.get(target, target.replace('TARGET_', '').replace('MOVE_TARGET_', '').replace('_', ' ').title())
 
+STAT_LABELS = {
+    'ATTACK': '공격',
+    'DEFENSE': '방어',
+    'SPEED': '스피드',
+    'SPECIAL_ATTACK': '특수공격',
+    'SPECIAL_DEFENSE': '특수방어',
+    'ACCURACY': '명중률',
+    'EVASION': '회피율',
+}
+
+STATUS_HIT_LABELS = {
+    'BURN': '화상',
+    'FREEZE': '얼음',
+    'PARALYZE': '마비',
+    'POISON': '독',
+    'FLINCH': '풀죽음',
+    'CONFUSE': '혼란',
+    'THAW': '얼음 해제',
+}
+
+EFFECT_LABELS = {
+    'EFFECT_ABSORB': '피해 흡수',
+    'EFFECT_ALL_STATS_UP_HIT': '명중 후 모든 능력 상승',
+    'EFFECT_ALWAYS_HIT': '필중',
+    'EFFECT_ASSIST': '조수: 동료 기술 사용',
+    'EFFECT_ATTRACT': '헤롱헤롱',
+    'EFFECT_BATON_PASS': '교체 후 능력/상태 인계',
+    'EFFECT_BEAT_UP': '파티원 연속 공격',
+    'EFFECT_BELLY_DRUM': 'HP를 깎고 공격 최대화',
+    'EFFECT_BIDE': '받은 피해를 모아 반격',
+    'EFFECT_BLAZE_KICK': '급소율 높음, 화상 확률',
+    'EFFECT_BRICK_BREAK': '장막 파괴',
+    'EFFECT_BULK_UP': '공격/방어 상승',
+    'EFFECT_CALM_MIND': '특수공격/특수방어 상승',
+    'EFFECT_CAMOUFLAGE': '지형에 따라 타입 변경',
+    'EFFECT_CHARGE': '다음 전기 기술 강화',
+    'EFFECT_CONFUSE': '혼란',
+    'EFFECT_CONVERSION': '타입 변경',
+    'EFFECT_CONVERSION_2': '받은 기술에 유리한 타입 변경',
+    'EFFECT_COSMIC_POWER': '방어/특수방어 상승',
+    'EFFECT_COUNTER': '물리 피해 반격',
+    'EFFECT_CURSE': '타입별 저주 효과',
+    'EFFECT_DEFENSE_CURL': '방어 상승, 구르기 강화',
+    'EFFECT_DESTINY_BOND': '길동무',
+    'EFFECT_DISABLE': '상대 마지막 기술 봉인',
+    'EFFECT_DOUBLE_EDGE': '반동 피해',
+    'EFFECT_DOUBLE_HIT': '2회 공격',
+    'EFFECT_DRAGON_DANCE': '공격/스피드 상승',
+    'EFFECT_DRAGON_RAGE': '고정 40 피해',
+    'EFFECT_DREAM_EATER': '잠든 대상 피해 흡수',
+    'EFFECT_EARTHQUAKE': '땅속 대상에게 2배',
+    'EFFECT_ENCORE': '같은 기술 반복 유도',
+    'EFFECT_ENDEAVOR': '상대 HP를 자신의 HP까지 감소',
+    'EFFECT_ENDURE': '이번 턴 1HP로 버팀',
+    'EFFECT_ERUPTION': 'HP가 높을수록 강함',
+    'EFFECT_EXPLOSION': '자폭 공격',
+    'EFFECT_FACADE': '상태이상일 때 위력 2배',
+    'EFFECT_FAKE_OUT': '첫 턴만 가능, 풀죽음',
+    'EFFECT_FALSE_SWIPE': '상대 HP를 1 미만으로 줄이지 않음',
+    'EFFECT_FLAIL': 'HP가 낮을수록 강함',
+    'EFFECT_FLATTER': '특수공격 상승 후 혼란',
+    'EFFECT_FLY': '1턴 준비 후 공격',
+    'EFFECT_FOCUS_ENERGY': '급소율 상승',
+    'EFFECT_FOCUS_PUNCH': '맞으면 실패하는 선준비 공격',
+    'EFFECT_FOLLOW_ME': '상대 공격을 자신에게 유도',
+    'EFFECT_FORESIGHT': '회피 무시/고스트 타격 가능',
+    'EFFECT_FRUSTRATION': '친밀도가 낮을수록 강함',
+    'EFFECT_FURY_CUTTER': '연속 성공 시 위력 상승',
+    'EFFECT_FUTURE_SIGHT': '미래 턴에 피해',
+    'EFFECT_GRUDGE': '기절 시 상대 PP 고갈',
+    'EFFECT_GUST': '공중 대상에게 2배',
+    'EFFECT_HAIL': '싸라기눈',
+    'EFFECT_HAZE': '능력 변화 초기화',
+    'EFFECT_HEAL_BELL': '파티 상태이상 회복',
+    'EFFECT_HELPING_HAND': '아군 기술 위력 상승',
+    'EFFECT_HIDDEN_POWER': '개체값에 따라 타입/위력 변화',
+    'EFFECT_HIGH_CRITICAL': '급소율 높음',
+    'EFFECT_HIT': '일반 공격',
+    'EFFECT_IMPRISON': '같은 기술 사용 봉인',
+    'EFFECT_INGRAIN': '교체 불가, 매 턴 회복',
+    'EFFECT_KNOCK_OFF': '상대 지닌 도구 제거',
+    'EFFECT_LEECH_SEED': '씨뿌리기 흡수',
+    'EFFECT_LEVEL_DAMAGE': '사용자 레벨만큼 피해',
+    'EFFECT_LIGHT_SCREEN': '특수 피해 완화',
+    'EFFECT_LOCK_ON': '다음 공격 필중',
+    'EFFECT_LOW_KICK': '상대가 무거울수록 강함',
+    'EFFECT_MAGIC_COAT': '상태 기술 반사',
+    'EFFECT_MAGNITUDE': '랜덤 위력 지진계 공격',
+    'EFFECT_MEAN_LOOK': '교체 방지',
+    'EFFECT_MEMENTO': '자신 기절, 상대 공격/특공 크게 하락',
+    'EFFECT_METRONOME': '무작위 기술 사용',
+    'EFFECT_MIMIC': '상대 기술 복사',
+    'EFFECT_MINIMIZE': '회피율 크게 상승',
+    'EFFECT_MIRROR_COAT': '특수 피해 반격',
+    'EFFECT_MIRROR_MOVE': '상대 마지막 기술 따라하기',
+    'EFFECT_MIST': '능력 하락 방지',
+    'EFFECT_MOONLIGHT': '날씨에 따라 HP 회복',
+    'EFFECT_MORNING_SUN': '날씨에 따라 HP 회복',
+    'EFFECT_MUD_SPORT': '전기 기술 약화',
+    'EFFECT_MULTI_HIT': '2-5회 연속 공격',
+    'EFFECT_NATURE_POWER': '지형에 따라 기술 변화',
+    'EFFECT_NIGHTMARE': '잠든 대상 매 턴 피해',
+    'EFFECT_OHKO': '일격기',
+    'EFFECT_OVERHEAT': '명중 후 특수공격 크게 하락',
+    'EFFECT_PAIN_SPLIT': 'HP를 평균으로 나눔',
+    'EFFECT_PARALYZE': '마비',
+    'EFFECT_PAY_DAY': '전투 후 돈 획득',
+    'EFFECT_PERISH_SONG': '3턴 후 양측 기절',
+    'EFFECT_POISON': '독',
+    'EFFECT_POISON_FANG': '맹독 확률',
+    'EFFECT_POISON_TAIL': '급소율 높음, 독 확률',
+    'EFFECT_PRESENT': '랜덤 피해 또는 회복',
+    'EFFECT_PROTECT': '공격 방어',
+    'EFFECT_PSYCH_UP': '상대 능력 변화 복사',
+    'EFFECT_PSYWAVE': '랜덤 고정 피해',
+    'EFFECT_PURSUIT': '교체 대상에게 2배',
+    'EFFECT_QUICK_ATTACK': '선공',
+    'EFFECT_RAGE': '맞을 때마다 공격 상승',
+    'EFFECT_RAIN_DANCE': '비',
+    'EFFECT_RAMPAGE': '2-3턴 난동 후 혼란',
+    'EFFECT_RAPID_SPIN': '구속/압정 제거',
+    'EFFECT_RAZOR_WIND': '1턴 준비 후 급소율 높은 공격',
+    'EFFECT_RECHARGE': '다음 턴 행동 불가',
+    'EFFECT_RECOIL': '반동 피해',
+    'EFFECT_RECOIL_IF_MISS': '빗나가면 반동 피해',
+    'EFFECT_RECYCLE': '사용한 도구 재활용',
+    'EFFECT_REFLECT': '물리 피해 완화',
+    'EFFECT_REFRESH': '자신 상태이상 회복',
+    'EFFECT_REST': '잠들고 HP 완전 회복',
+    'EFFECT_RESTORE_HP': 'HP 회복',
+    'EFFECT_RETURN': '친밀도가 높을수록 강함',
+    'EFFECT_REVENGE': '후공 시 위력 2배',
+    'EFFECT_ROAR': '상대 강제 교체',
+    'EFFECT_ROLE_PLAY': '상대 특성 복사',
+    'EFFECT_ROLLOUT': '연속 사용 시 위력 상승',
+    'EFFECT_SAFEGUARD': '상태이상 방지',
+    'EFFECT_SANDSTORM': '모래바람',
+    'EFFECT_SECRET_POWER': '장소에 따라 추가효과 변화',
+    'EFFECT_SKETCH': '상대 마지막 기술 영구 복사',
+    'EFFECT_SKILL_SWAP': '특성 교환',
+    'EFFECT_SKULL_BASH': '1턴 준비 후 공격, 방어 상승',
+    'EFFECT_SKY_ATTACK': '1턴 준비 후 공격, 급소율 높음',
+    'EFFECT_SKY_UPPERCUT': '공중 대상 타격 가능',
+    'EFFECT_SLEEP': '수면',
+    'EFFECT_SLEEP_TALK': '잠든 상태에서 기술 사용',
+    'EFFECT_SMELLINGSALT': '마비 대상 2배, 마비 회복',
+    'EFFECT_SNATCH': '상대 보조기 가로채기',
+    'EFFECT_SNORE': '잠든 상태에서 공격',
+    'EFFECT_SOFTBOILED': 'HP 회복',
+    'EFFECT_SOLARBEAM': '1턴 모아 공격, 햇살이면 즉시',
+    'EFFECT_SONICBOOM': '고정 20 피해',
+    'EFFECT_SPIKES': '교체 진입 피해 설치',
+    'EFFECT_SPITE': '상대 마지막 기술 PP 감소',
+    'EFFECT_SPIT_UP': '비축 횟수에 따라 공격',
+    'EFFECT_SPLASH': '효과 없음',
+    'EFFECT_STOCKPILE': '힘 비축',
+    'EFFECT_SUBSTITUTE': '대타 생성',
+    'EFFECT_SUNNY_DAY': '햇살',
+    'EFFECT_SUPERPOWER': '명중 후 공격/방어 하락',
+    'EFFECT_SUPER_FANG': '상대 현재 HP 절반 피해',
+    'EFFECT_SWAGGER': '상대 공격 크게 상승 후 혼란',
+    'EFFECT_SWALLOW': '비축 횟수에 따라 회복',
+    'EFFECT_SYNTHESIS': '날씨에 따라 HP 회복',
+    'EFFECT_TAUNT': '공격 기술만 사용 가능',
+    'EFFECT_TEETER_DANCE': '전체 혼란',
+    'EFFECT_TELEPORT': '야생전 도주',
+    'EFFECT_THIEF': '상대 도구 훔치기',
+    'EFFECT_THUNDER': '비에서 필중, 마비 확률',
+    'EFFECT_TICKLE': '공격/방어 하락',
+    'EFFECT_TORMENT': '같은 기술 연속 사용 방지',
+    'EFFECT_TOXIC': '맹독',
+    'EFFECT_TRANSFORM': '상대 모습/능력 복사',
+    'EFFECT_TRAP': '2-5턴 구속 피해',
+    'EFFECT_TRICK': '도구 교환',
+    'EFFECT_TRIPLE_KICK': '3회 연속 공격',
+    'EFFECT_TRI_ATTACK': '마비/화상/얼음 확률',
+    'EFFECT_TWINEEDLE': '2회 공격, 독 확률',
+    'EFFECT_TWISTER': '공중 대상 2배, 풀죽음 확률',
+    'EFFECT_UPROAR': '2-5턴 소란, 수면 방지',
+    'EFFECT_VITAL_THROW': '후공 필중',
+    'EFFECT_WATER_SPORT': '불꽃 기술 약화',
+    'EFFECT_WEATHER_BALL': '날씨에 따라 타입/위력 변화',
+    'EFFECT_WILL_O_WISP': '화상',
+    'EFFECT_WISH': '다음 턴 HP 회복',
+    'EFFECT_YAWN': '다음 턴 수면',
+}
+
+def effect_label(effect):
+    effect = effect.strip()
+    if effect in EFFECT_LABELS:
+        return EFFECT_LABELS[effect]
+    key = effect.replace('EFFECT_', '')
+    for status, label in STATUS_HIT_LABELS.items():
+        if key == f'{status}_HIT':
+            return f'명중 후 {label}'
+        if key == f'{status}_HIT_2':
+            return f'명중 후 {label}'
+    for stat_key, stat_label in sorted(STAT_LABELS.items(), key=lambda x: len(x[0]), reverse=True):
+        if key == f'{stat_key}_UP':
+            return f'{stat_label} 상승'
+        if key == f'{stat_key}_UP_2':
+            return f'{stat_label} 크게 상승'
+        if key == f'{stat_key}_UP_HIT':
+            return f'명중 후 {stat_label} 상승'
+        if key == f'{stat_key}_DOWN':
+            return f'{stat_label} 하락'
+        if key == f'{stat_key}_DOWN_2':
+            return f'{stat_label} 크게 하락'
+        if key == f'{stat_key}_DOWN_HIT':
+            return f'명중 후 {stat_label} 하락'
+    return key.replace('_', ' ').title()
+
 moves_h = read('include/constants/moves.h')
 move_ids = {m.group(1): int(m.group(2)) for m in re.finditer(r'#define\s+(MOVE_[A-Z0-9_]+)\s+(\d+)', moves_h)}
 move_by_id = {v:k for k,v in move_ids.items()}
@@ -153,7 +365,7 @@ for m in re.finditer(r'\[(MOVE_[A-Z0-9_]+)\]\s*=\s*\{(.*?)\n\s*\},', text, re.S)
         'id': move_ids.get(const, 0), 'const': const, 'name': move_names.get(const, title_from_const(const[5:])), 'nameKo': MOVE_KO.get(const, ''),
         'type': typ, 'category': 'Status' if fields.get('power','0').strip() == '0' else ('Physical' if typ in {'NORMAL','FIGHTING','POISON','GROUND','FLYING','BUG','ROCK','GHOST','STEEL'} else 'Special'),
         'power': fields.get('power','0').strip(), 'accuracy': fields.get('accuracy','0').strip(), 'pp': fields.get('pp','0').strip(),
-        'effect': fields.get('effect','').replace('EFFECT_','').strip(), 'chance': fields.get('secondaryEffectChance','0').strip(),
+        'effect': effect_label(fields.get('effect','').strip()), 'chance': fields.get('secondaryEffectChance','0').strip(),
         'target': target_label(fields.get('target','').strip()), 'priority': fields.get('priority','0').strip(),
         'flags': [flag_label(f) for f in flags], 'learners': [], 'obtain': []
     }
@@ -312,9 +524,9 @@ html_doc = f'''<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ruby/Sapphire Move Guide</title>
 <style>
 :root{{--ink:#1e211c;--muted:#687162;--line:#d7decd;--card:#fffef8;--leaf:#2f6f4e;--ruby:#b51f2a;--sapphire:#1d5eaa;}}
-*{{box-sizing:border-box}} body{{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,'SF Pro Text','Apple SD Gothic Neo','Noto Sans KR','Helvetica Neue',sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 0,#f6d4c4 0,transparent 28%),radial-gradient(circle at 90% 4%,#cfe4ff 0,transparent 30%),linear-gradient(135deg,#fffaf0,#edf5ed);-webkit-font-smoothing:antialiased}} main{{max-width:1440px;margin:0 auto;padding:32px 18px 72px}} h1{{margin:0;font-size:34px;letter-spacing:-.04em;font-weight:950}} p{{margin:7px 0 0;color:var(--muted)}} .hero{{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:18px;padding:22px;border:1px solid var(--line);border-radius:24px;background:rgba(255,254,248,.88);box-shadow:0 18px 42px rgba(42,60,35,.1)}} .pill{{display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:850}}
-.toolbar{{display:grid;grid-template-columns:1.5fr repeat(4,minmax(130px,.55fr));gap:10px;padding:12px;margin:18px 0;border:1px solid var(--line);border-radius:20px;background:rgba(255,254,248,.94);box-shadow:0 16px 34px rgba(42,60,35,.08)}} input,select,button{{width:100%;border:1px solid var(--line);border-radius:13px;background:#fffefb;color:var(--ink);padding:10px 12px;font:inherit}} button{{cursor:pointer;font-weight:850}} .view-tabs,.type-row{{grid-column:1/-1;display:flex;gap:8px;align-items:center;flex-wrap:wrap}} .label{{font-size:12px;font-weight:950;color:var(--muted)}} .chip{{width:auto;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;color:var(--muted);background:#fffefb}} .chip.active{{background:var(--leaf);border-color:var(--leaf);color:white}} .type-chip{{color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.35);border:0}} .type-chip.active{{color:#fff;box-shadow:0 0 0 3px rgba(42,60,35,.18), inset 0 0 0 2px rgba(255,255,255,.7);transform:translateY(-1px)}} {css_type}
-.table-wrap{{overflow:auto;max-height:calc(100vh - 286px);border:1px solid var(--line);border-radius:18px;background:rgba(255,254,248,.96);box-shadow:0 18px 38px rgba(42,60,35,.08)}} .empty-state{{padding:34px;text-align:center;background:#fffef8;color:var(--muted)}} .empty-state strong{{display:block;margin-bottom:6px;color:var(--ink);font-size:18px;letter-spacing:-.02em}} .empty-state a{{display:inline-flex;margin-top:12px;padding:8px 12px;border-radius:999px;background:var(--leaf);color:white;text-decoration:none;font-weight:900}} table{{width:100%;min-width:1720px;border-collapse:separate;border-spacing:0}} body[data-view="pokemon"] table{{min-width:1120px}} body[data-view="pokemon"] .pokemon-cell{{width:150px;min-width:140px;max-width:170px}} body[data-view="pokemon"] .learn-table th:first-child,body[data-view="pokemon"] .learn-table td:first-child{{width:58px;white-space:nowrap;color:var(--muted);font-size:11px}} body[data-view="pokemon"] .learn-table th:last-child,body[data-view="pokemon"] .learn-table td:last-child{{width:58px;text-align:right}} body[data-view="pokemon"] .learn-table .type{{width:54px;min-width:54px;padding:2px 6px;font-size:10px}} body[data-view="pokemon"] .learn-table th,body[data-view="pokemon"] .learn-table td{{padding:5px 6px}} body[data-view="pokemon"] .learn-box{{min-width:0}} th{{position:sticky;top:0;z-index:5;text-align:left;font-size:12px;color:var(--muted);background:#eef4e7;padding:10px;border-bottom:1px solid var(--line)}} th.sortable{{cursor:pointer;user-select:none;white-space:nowrap}} th.sortable::after{{content:'↕';margin-left:6px;color:#9aa691;font-size:10px}} th.sortable.sorted-asc::after{{content:'↑';color:var(--leaf)}} th.sortable.sorted-desc::after{{content:'↓';color:var(--leaf)}} td{{padding:10px;border-bottom:1px solid var(--line);background:rgba(255,254,248,.95);vertical-align:top}} tr:hover td{{background:#f7fbef}} .name{{font-weight:950;letter-spacing:-.01em}} .type{{display:inline-flex;align-items:center;justify-content:center;width:74px;min-width:74px;padding:3px 8px;border-radius:999px;color:#fff;font-size:12px;font-weight:950;text-shadow:0 1px 0 rgba(0,0,0,.35)}} .type.physical{{border-radius:999px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.22)}} .type.special{{border-radius:6px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.42)}} .type.status{{border-radius:3px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.22) 0 5px,rgba(0,0,0,.08) 5px 10px),#8b8d98;letter-spacing:.04em}} .cat{{display:inline-flex;padding:3px 8px;border-radius:999px;background:#f0f3ea;color:#44513f;font-size:12px;font-weight:900}} .cat.Physical{{background:#fff0e7;color:#a14b20}} .cat.Special{{background:#eaf2ff;color:#24558f}} .cat.Status{{background:#f0f0f4;color:#5a5b66}} .small{{color:var(--muted);font-size:12px}} .tags{{display:flex;gap:5px;flex-wrap:wrap}} .tag{{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;background:#eef4e7;color:#40513a;font-size:12px;font-weight:850}} .tag.limited{{background:#fff0e8;color:#9a4d20}} .tag.repeat{{background:#e9f7ed;color:#2d7044}} .tag.nonconsume{{background:#eaf2ff;color:#24558f}} .learners{{max-width:430px}} .pokemon-list{{display:flex;gap:5px;flex-wrap:wrap;max-height:110px;overflow:auto}} .learn-grid{{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}} .learn-box{{min-width:360px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fffefb}} .learn-title{{padding:7px 9px;background:#eef4e7;color:#40513a;font-size:12px;font-weight:950}} .learn-table{{width:100%;min-width:0;border-collapse:collapse}} .learn-table th{{position:static;padding:6px 8px;background:#f7faef;font-size:11px}} .learn-table td{{padding:6px 8px;border-bottom:1px solid rgba(42,60,35,.1);font-size:12px;vertical-align:middle}} .learn-empty{{padding:10px;color:var(--muted);font-size:12px}} .move-title{{display:inline-grid;gap:1px;line-height:1.16;vertical-align:middle}} .move-ko{{display:block;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:-.02em}} .move-link{{display:inline-flex;align-items:center;gap:7px;color:inherit;text-decoration:none;border-radius:12px;padding:2px 5px 2px 2px;margin:-2px 0;transition:background .14s ease,box-shadow .14s ease,transform .14s ease}} .move-link:hover{{text-decoration:none;background:#eef4e7;box-shadow:0 6px 16px rgba(47,111,78,.14);transform:translateY(-1px)}} .move-link:hover .type{{filter:saturate(1.12) brightness(1.04)}} .mon{{display:inline-flex;gap:4px;padding:3px 7px;border-radius:999px;background:#f3f6ef;color:#2f3b2b;font-size:12px;font-weight:800}} .method{{color:var(--muted)}} details{{max-width:460px}} summary{{cursor:pointer;font-weight:900;color:#2f513f}} .obtain-list{{display:grid;gap:4px;margin-top:6px}} .source-note{{font-size:12px;color:var(--muted)}} .note-nav{{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 18px;padding:8px;border:1px solid var(--line);border-radius:999px;background:rgba(255,254,248,.82);box-shadow:0 10px 24px rgba(42,60,35,.08)}} .note-nav a{{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:900;transition:background .14s ease,color .14s ease,transform .14s ease}} .note-nav a:hover{{background:#eef4e7;color:var(--ink);transform:translateY(-1px)}} .note-nav a.active{{background:var(--leaf);color:white}} @media(max-width:900px){{.hero{{display:block}}.toolbar{{grid-template-columns:1fr 1fr}}main{{padding-inline:12px}}}}
+*{{box-sizing:border-box}} body{{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,'SF Pro Text','Apple SD Gothic Neo','Noto Sans KR','Helvetica Neue',sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 0,#f6d4c4 0,transparent 28%),radial-gradient(circle at 90% 4%,#cfe4ff 0,transparent 30%),linear-gradient(135deg,#fffaf0,#edf5ed);-webkit-font-smoothing:antialiased}} main{{max-width:1440px;margin:0 auto;padding:16px 18px 48px}} h1{{margin:0;font-size:26px;letter-spacing:-.04em;font-weight:950}} p{{margin:4px 0 0;color:var(--muted)}} .hero{{display:flex;justify-content:space-between;gap:14px;align-items:end;margin-bottom:10px;padding:14px 16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,254,248,.88);box-shadow:0 10px 26px rgba(42,60,35,.08)}} .pill{{display:inline-flex;gap:6px;align-items:center;padding:5px 9px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);font-weight:850}}
+.toolbar{{display:grid;grid-template-columns:1.5fr repeat(4,minmax(130px,.55fr));gap:8px;padding:8px;margin:10px 0;border:1px solid var(--line);border-radius:16px;background:rgba(255,254,248,.94);box-shadow:0 10px 22px rgba(42,60,35,.07)}} input,select,button{{width:100%;border:1px solid var(--line);border-radius:11px;background:#fffefb;color:var(--ink);padding:7px 10px;font:inherit}} button{{cursor:pointer;font-weight:850}} .view-tabs,.type-row{{grid-column:1/-1;display:flex;gap:6px;align-items:center;flex-wrap:wrap}} .label{{font-size:12px;font-weight:950;color:var(--muted)}} .chip{{width:auto;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900;color:var(--muted);background:#fffefb}} .chip.active{{background:var(--leaf);border-color:var(--leaf);color:white}} .type-chip{{color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.35);border:0}} .type-chip.active{{color:#fff;box-shadow:0 0 0 3px rgba(42,60,35,.18), inset 0 0 0 2px rgba(255,255,255,.7);transform:translateY(-1px)}} {css_type}
+.table-wrap{{overflow:auto;max-height:calc(100vh - 202px);border:1px solid var(--line);border-radius:16px;background:rgba(255,254,248,.96);box-shadow:0 12px 28px rgba(42,60,35,.08)}} .empty-state{{padding:26px;text-align:center;background:#fffef8;color:var(--muted)}} .empty-state strong{{display:block;margin-bottom:6px;color:var(--ink);font-size:18px;letter-spacing:-.02em}} .empty-state a{{display:inline-flex;margin-top:12px;padding:8px 12px;border-radius:999px;background:var(--leaf);color:white;text-decoration:none;font-weight:900}} table{{width:100%;min-width:1720px;border-collapse:separate;border-spacing:0}} body[data-view="pokemon"] table{{min-width:1120px}} body[data-view="pokemon"] .pokemon-cell{{width:150px;min-width:140px;max-width:170px}} body[data-view="pokemon"] .learn-table th:first-child,body[data-view="pokemon"] .learn-table td:first-child{{width:58px;white-space:nowrap;color:var(--muted);font-size:11px}} body[data-view="pokemon"] .learn-table th:last-child,body[data-view="pokemon"] .learn-table td:last-child{{width:58px;text-align:right}} body[data-view="pokemon"] .learn-table .type{{width:54px;min-width:54px;padding:2px 6px;font-size:10px}} body[data-view="pokemon"] .learn-table th,body[data-view="pokemon"] .learn-table td{{padding:4px 6px}} body[data-view="pokemon"] .learn-box{{min-width:0}} th{{position:sticky;top:0;z-index:5;text-align:left;font-size:12px;color:var(--muted);background:#eef4e7;padding:8px 9px;border-bottom:1px solid var(--line)}} th.sortable{{cursor:pointer;user-select:none;white-space:nowrap}} th.sortable::after{{content:'↕';margin-left:6px;color:#9aa691;font-size:10px}} th.sortable.sorted-asc::after{{content:'↑';color:var(--leaf)}} th.sortable.sorted-desc::after{{content:'↓';color:var(--leaf)}} td{{padding:8px 9px;border-bottom:1px solid var(--line);background:rgba(255,254,248,.95);vertical-align:top}} tr:hover td{{background:#f7fbef}} .name{{font-weight:950;letter-spacing:-.01em}} .type{{display:inline-flex;align-items:center;justify-content:center;width:74px;min-width:74px;padding:3px 8px;border-radius:999px;color:#fff;font-size:12px;font-weight:950;text-shadow:0 1px 0 rgba(0,0,0,.35)}} .type.physical{{border-radius:999px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.22)}} .type.special{{border-radius:6px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.42)}} .type.status{{border-radius:3px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.22) 0 5px,rgba(0,0,0,.08) 5px 10px),#8b8d98;letter-spacing:.04em}} .cat{{display:inline-flex;padding:3px 8px;border-radius:999px;background:#f0f3ea;color:#44513f;font-size:12px;font-weight:900}} .cat.Physical{{background:#fff0e7;color:#a14b20}} .cat.Special{{background:#eaf2ff;color:#24558f}} .cat.Status{{background:#f0f0f4;color:#5a5b66}} .small{{color:var(--muted);font-size:12px}} .tags{{display:flex;gap:5px;flex-wrap:wrap}} .tag{{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;background:#eef4e7;color:#40513a;font-size:12px;font-weight:850}} .tag.limited{{background:#fff0e8;color:#9a4d20}} .tag.repeat{{background:#e9f7ed;color:#2d7044}} .tag.nonconsume{{background:#eaf2ff;color:#24558f}} .learners{{max-width:430px}} .pokemon-list{{display:flex;gap:5px;flex-wrap:wrap;max-height:110px;overflow:auto}} .learn-grid{{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start}} .learn-box{{min-width:360px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fffefb}} .learn-title{{padding:6px 8px;background:#eef4e7;color:#40513a;font-size:12px;font-weight:950}} .learn-table{{width:100%;min-width:0;border-collapse:collapse}} .learn-table th{{position:static;padding:5px 7px;background:#f7faef;font-size:11px}} .learn-table td{{padding:5px 7px;border-bottom:1px solid rgba(42,60,35,.1);font-size:12px;vertical-align:middle}} .learn-empty{{padding:9px;color:var(--muted);font-size:12px}} .move-title{{display:inline-grid;gap:1px;line-height:1.16;vertical-align:middle}} .move-ko{{display:block;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:-.02em}} .move-link{{display:inline-flex;align-items:center;gap:7px;color:inherit;text-decoration:none;border-radius:12px;padding:2px 5px 2px 2px;margin:-2px 0;transition:background .14s ease,box-shadow .14s ease,transform .14s ease}} .move-link:hover{{text-decoration:none;background:#eef4e7;box-shadow:0 6px 16px rgba(47,111,78,.14);transform:translateY(-1px)}} .move-link:hover .type{{filter:saturate(1.12) brightness(1.04)}} .mon{{display:inline-flex;gap:4px;padding:3px 7px;border-radius:999px;background:#f3f6ef;color:#2f3b2b;font-size:12px;font-weight:800}} .method{{color:var(--muted)}} details{{max-width:460px}} summary{{cursor:pointer;font-weight:900;color:#2f513f}} .obtain-list{{display:grid;gap:4px;margin-top:6px}} .source-note{{margin:8px 0 0;font-size:12px;color:var(--muted)}} .note-nav{{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 10px;padding:5px;border:1px solid var(--line);border-radius:999px;background:rgba(255,254,248,.82);box-shadow:0 8px 18px rgba(42,60,35,.07)}} .note-nav a{{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:900;transition:background .14s ease,color .14s ease,transform .14s ease}} .note-nav a:hover{{background:#eef4e7;color:var(--ink);transform:translateY(-1px)}} .note-nav a.active{{background:var(--leaf);color:white}} @media(max-width:900px){{.hero{{display:block}}.toolbar{{grid-template-columns:1fr 1fr}}main{{padding-inline:12px}}}}
 </style></head><body><main><nav class="note-nav" aria-label="Ruby Sapphire notes"><a href="index.html">허브</a><a href="hoenn-pokedex-checklist.html">호연도감</a><a class="active" href="ruby-sapphire-move-guide.html">기술표</a></nav><section class="hero"><div><h1>기술 가이드</h1><p>Ruby/Sapphire Notes · pokeruby 저장소에서 추출한 기술표. 기술 검색과 도감에서 선택한 포켓몬의 습득 기술을 확인합니다.</p></div><div class="pill" id="count">0 shown</div></section>
 <section class="toolbar"><input id="search" type="search" placeholder="기술명, 포켓몬명, 효과, 획득처 검색"><select id="category"><option value="">모든 분류</option><option>Physical</option><option>Special</option><option>Status</option></select><select id="power"><option value="">모든 위력</option><option value="status">변화기</option><option value="low">1-59</option><option value="mid">60-89</option><option value="high">90+</option></select><select id="method"><option value="">모든 습득법</option><option>레벨업</option><option>TM/HM</option><option>알 기술</option></select><select id="obtain"><option value="">TM/HM 획득 전체</option><option value="limited">유한 획득</option><option value="repeat">반복 구매</option><option value="nonconsume">비소모 HM</option></select><div class="view-tabs"><span class="label">보기</span><button class="chip active" type="button" data-view="moves">기술별</button><button class="chip" type="button" data-view="pokemon">포켓몬별</button></div><div class="type-row"><span class="label">타입</span><button class="chip active" type="button" data-type="">전체</button>{''.join('<button class="chip type-chip type-'+k.lower()+'" type="button" data-type="'+k+'">'+k+'</button>' for k in type_colors)}</div></section>
 <div class="table-wrap"><table><thead id="thead"></thead><tbody id="body"></tbody></table></div><p class="source-note">출처: pokeruby `battle_moves.c`, `move_names_en.h`, `level_up_learnsets.h`, `tmhm_learnsets.h`, `egg_moves.h`, `party_menu.c`, `data/maps`, 게임코너 코인 교환, `data/item_ball_scripts.inc`.</p>

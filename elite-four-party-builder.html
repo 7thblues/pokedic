@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>루비/사파이어 사천왕 파티 빌더</title>
+<style>
+:root{--ink:#1d231f;--muted:#657064;--line:#d9e0d2;--card:#fffef8;--paper:#fffaf0;--leaf:#2f6f4e;--gold:#b98a2e;--ruby:#b51f2a;--sapphire:#1d5eaa;--danger:#b73535;--ok:#2f7652;--shadow:0 18px 42px rgba(42,60,35,.11)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font:14px/1.52 -apple-system,BlinkMacSystemFont,'SF Pro Text','Apple SD Gothic Neo','Noto Sans KR','Helvetica Neue',sans-serif;color:var(--ink);background:radial-gradient(circle at 9% -4%,#ffd4c7 0,transparent 28%),radial-gradient(circle at 92% 0,#cfe4ff 0,transparent 30%),linear-gradient(135deg,#fffaf0,#edf5ed);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+main{max-width:1280px;margin:0 auto;padding:24px 16px 72px}
+.topbar{position:sticky;top:0;z-index:20;margin:-24px -16px 20px;padding:14px 16px;border-bottom:1px solid rgba(217,224,210,.86);backdrop-filter:blur(16px);background:rgba(255,250,240,.82)}
+.nav{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:-.035em}
+.brand small{display:block;color:var(--muted);font-size:11px;font-weight:850;letter-spacing:0}
+.navlinks{display:flex;gap:8px;flex-wrap:wrap}
+.navlinks a,.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,254,248,.86);color:#385142;font-size:12px;font-weight:900}
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:18px;align-items:stretch;margin-bottom:18px}
+.panel{border:1px solid var(--line);border-radius:24px;background:rgba(255,254,248,.92);box-shadow:var(--shadow);overflow:hidden}
+.intro{padding:24px}
+.eyebrow{display:inline-flex;padding:6px 10px;border-radius:999px;background:#edf4e7;color:var(--leaf);font-size:12px;font-weight:950;letter-spacing:.06em;text-transform:uppercase}
+h1{margin:14px 0 8px;font-size:38px;line-height:1.05;letter-spacing:-.055em}
+p{margin:8px 0;color:var(--muted)}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}
+.stat{padding:12px;border:1px solid #e3e8da;border-radius:18px;background:#fbfff6}
+.stat b{display:block;font-size:22px;line-height:1}.stat span{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:850}
+.source{padding:18px;background:linear-gradient(135deg,#20372b,#315943);color:#f7fff7}
+.source h2{margin:0 0 8px;font-size:18px}.source p{color:#dce9dd}.source code{color:#fff;background:rgba(255,255,255,.1);padding:2px 5px;border-radius:7px}
+.section{margin-top:18px}
+.section h2{margin:0 0 10px;font-size:24px;letter-spacing:-.035em}
+.section h3{margin:0 0 8px;font-size:17px}
+.grid{display:grid;gap:14px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{padding:16px;border:1px solid var(--line);border-radius:22px;background:rgba(255,254,248,.94);box-shadow:0 12px 28px rgba(42,60,35,.08)}
+.enemy-table,.matrix{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+th,td{padding:9px 10px;border-bottom:1px solid #e6eadf;text-align:left;vertical-align:top}
+th{position:sticky;top:58px;z-index:5;background:#f2f6eb;color:#3c4b3f;font-size:12px;font-weight:950}
+tr:last-child td{border-bottom:0}
+.trainer{font-weight:950}.lvl{color:var(--muted);font-size:12px;font-weight:900}
+.mon{display:inline-flex;align-items:center;gap:7px;font-weight:950}
+.ko{display:block;color:var(--muted);font-size:12px;font-weight:800}
+.moves{display:flex;gap:5px;flex-wrap:wrap}
+.move{display:inline-flex;gap:4px;align-items:center;padding:3px 7px;border-radius:999px;background:#f3f5ed;border:1px solid #e0e5d8;font-size:12px;font-weight:850;white-space:nowrap}
+.type{display:inline-flex;min-width:68px;justify-content:center;align-items:center;padding:3px 7px;border-radius:999px;color:#fff;font-size:11px;font-weight:950;letter-spacing:.02em;text-shadow:0 1px 1px rgba(0,0,0,.28)}
+.type.NORMAL{background:#a8a878}.type.FIRE{background:#f08030}.type.WATER{background:#6890f0}.type.ELECTRIC{background:#f8d030;color:#3a2d00;text-shadow:none}.type.GRASS{background:#78c850}.type.ICE{background:#98d8d8;color:#18424a;text-shadow:none}.type.FIGHTING{background:#c03028}.type.POISON{background:#a040a0}.type.GROUND{background:#e0c068;color:#4a3510;text-shadow:none}.type.FLYING{background:#a890f0}.type.PSYCHIC{background:#f85888}.type.BUG{background:#a8b820}.type.ROCK{background:#b8a038}.type.GHOST{background:#705898}.type.DRAGON{background:#7038f8}.type.DARK{background:#705848}.type.STEEL{background:#b8b8d0;color:#263140;text-shadow:none}
+.party{position:relative;overflow:hidden}.party:before{content:'';position:absolute;inset:auto -12% -70px 52%;height:170px;border-radius:999px;background:linear-gradient(90deg,var(--ruby),var(--sapphire));opacity:.1;transform:rotate(-11deg)}
+.party-head{position:relative;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.party-title{font-size:21px;font-weight:950;letter-spacing:-.035em}.party-sub{color:var(--muted);font-size:13px}
+.rating{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.tag{display:inline-flex;padding:5px 8px;border-radius:999px;background:#eef4e7;color:#36523f;border:1px solid #dbe5d4;font-size:11px;font-weight:950}
+.tag.warn{background:#fff4dc;color:#765219;border-color:#efd49e}.tag.risk{background:#ffe9e9;color:#873333;border-color:#efc7c7}
+.slots{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.slot{padding:12px;border:1px solid #e1e7d9;border-radius:18px;background:rgba(255,255,250,.82)}
+.slot .name{font-size:16px;font-weight:950}.role{margin:6px 0 8px;color:#465449;font-size:12px;font-weight:850}
+.skill-list{display:flex;gap:5px;flex-wrap:wrap}
+.skill{padding:3px 6px;border-radius:8px;background:#f4f0e4;border:1px solid #e5dcc8;font-size:11px;font-weight:850}
+.why{position:relative;margin-top:12px;padding:12px;border-radius:18px;background:#f5f8ee;color:#475343}
+.why b{color:#24382d}
+.matrix td:first-child,.matrix th:first-child{font-weight:950}
+.check{color:var(--ok);font-weight:950}.bad{color:var(--danger);font-weight:950}.note{color:var(--gold);font-weight:950}
+.compact{font-size:12px;color:var(--muted)}
+.footer{margin-top:24px;padding:16px;border:1px dashed #cbd6c4;border-radius:20px;background:rgba(255,254,248,.74);color:var(--muted)}
+@media(max-width:980px){.hero,.grid.two,.grid.three{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,1fr)}.slots{grid-template-columns:repeat(2,1fr)}th{position:static}.nav{align-items:flex-start;flex-direction:column}}
+@media(max-width:640px){h1{font-size:30px}.summary,.slots{grid-template-columns:1fr}.topbar{position:static}.enemy-table{font-size:12px}.type{min-width:auto}.navlinks a{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="nav">
+    <div class="brand">사천왕 파티 빌더 <small>pokeruby source-based</small></div>
+    <div class="navlinks">
+      <a href="index.html">허브</a>
+      <a href="hoenn-pokedex-checklist.html">도감</a>
+      <a href="ruby-sapphire-move-guide.html">기술표</a>
+      <a href="#parties">추천 조합</a>
+      <a href="#source">근거</a>
+    </div>
+  </div>
+</div>
+<main>
+  <section class="hero">
+    <div class="panel intro">
+      <span class="eyebrow">Elite Four Run</span>
+      <h1>사천왕과 스티븐을 연전으로 넘기는 6마리 조합</h1>
+      <p>루비/사파이어의 마지막 연전은 악, 고스트, 얼음, 드래곤, 강철/바위/땅이 순서대로 이어진다. 이 문서는 `pokeruby`의 실제 트레이너 파티와 기술을 기준으로, 약점을 찌르면서도 한 방에 무너지지 않는 비교적 덜 뻔한 파티를 정리한다.</p>
+      <div class="summary">
+        <div class="stat"><b>27</b><span>상대 포켓몬</span></div>
+        <div class="stat"><b>5</b><span>연속 보스전</span></div>
+        <div class="stat"><b>6</b><span>추천 파티 슬롯</span></div>
+        <div class="stat"><b>Lv.46-58</b><span>상대 레벨 범위</span></div>
+      </div>
+    </div>
+    <div id="source" class="panel source">
+      <h2>분석 기준</h2>
+      <p>상대 파티는 <code>src/data/trainer_parties.h</code>의 `gTrainerParty_Sidney`, `Phoebe`, `Glacia`, `Drake`, `Steven`을 기준으로 했다. 회복 아이템은 <code>src/data/trainers_en.h</code>의 Full Restore 개수까지 반영했다.</p>
+      <p>추천 포켓몬의 기술은 <code>level_up_learnsets.h</code>, <code>tmhm_learnsets.h</code>, <code>battle_moves.c</code>에서 생성한 로컬 기술표와 대조했다. 통신 진화, 전설, 엔딩 후 메탕은 기본 추천에서 제외했다.</p>
+      <div class="moves" style="margin-top:12px">
+        <span class="pill">연전 안정성</span>
+        <span class="pill">희소성 우선</span>
+        <span class="pill">TM 경쟁 표시</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>상대 파티와 위험 기술</h2>
+    <table class="enemy-table">
+      <thead><tr><th>상대</th><th>포켓몬</th><th>기술</th><th>대응 핵심</th></tr></thead>
+      <tbody>
+        <tr><td class="trainer">시드니<br><span class="lvl">악</span></td><td><span class="mon">Mightyena<span class="ko">그라에나 Lv.46</span></span></td><td><div class="moves"><span class="move">Roar</span><span class="move">Take Down</span><span class="move">Sand-Attack</span><span class="move">Crunch</span></div></td><td>격투로 빠르게 정리. 명중률 하락에 오래 끌리지 않는다.</td></tr>
+        <tr><td class="trainer">시드니</td><td><span class="mon">Shiftry<span class="ko">다탱구 Lv.48</span></span></td><td><div class="moves"><span class="move">Fake Out</span><span class="move">Double Team</span><span class="move">Swagger</span><span class="move">Extrasensory</span></div></td><td>격투가 찌르지만 Extrasensory를 맞을 수 있다. 비행/화염 보조가 안전하다.</td></tr>
+        <tr><td class="trainer">시드니</td><td><span class="mon">Cacturne<span class="ko">밤선인 Lv.46</span></span></td><td><div class="moves"><span class="move">Leech Seed</span><span class="move">Faint Attack</span><span class="move">Needle Arm</span><span class="move">Cotton Spore</span></div></td><td>벌레 4배지만 추천 파티에서는 화염/격투/비행으로 처리.</td></tr>
+        <tr><td class="trainer">시드니</td><td><span class="mon">Sharpedo<span class="ko">샤크니아 Lv.48</span></span></td><td><div class="moves"><span class="move">Crunch</span><span class="move">Swagger</span><span class="move">Surf</span><span class="move">Slash</span></div></td><td>전기/격투. 불/땅 포켓몬으로 받으면 Surf가 위험하다.</td></tr>
+        <tr><td class="trainer">시드니</td><td><span class="mon">Absol<span class="ko">앱솔 Lv.49</span></span></td><td><div class="moves"><span class="move">Aerial Ace</span><span class="move">Snatch</span><span class="move">Swords Dance</span><span class="move">Slash</span></div></td><td>칼춤 후 Slash가 위험. 하리뭉/아말도 등 물리 내구로 즉시 압박.</td></tr>
+
+        <tr><td class="trainer">회연<br><span class="lvl">고스트</span></td><td><span class="mon">Dusclops<span class="ko">미라몽 Lv.48</span></span></td><td><div class="moves"><span class="move">Shadow Punch</span><span class="move">Confuse Ray</span><span class="move">Curse</span><span class="move">Future Sight</span></div></td><td>악 타입 특수기 또는 독/방어 운영. 혼란과 저주로 시간 끌림 주의.</td></tr>
+        <tr><td class="trainer">회연</td><td><span class="mon">Banette<span class="ko">다크펫 Lv.49</span></span></td><td><div class="moves"><span class="move">Shadow Ball</span><span class="move">Spite</span><span class="move">Will-O-Wisp</span><span class="move">Faint Attack</span></div></td><td>물리 어태커는 화상에 약하다. 샤크니아/밤선인 같은 특수 악 딜러가 좋다.</td></tr>
+        <tr><td class="trainer">회연</td><td><span class="mon">Sableye<span class="ko">깜까미 Lv.50</span></span></td><td><div class="moves"><span class="move">Shadow Ball</span><span class="move">Psychic</span><span class="move">Attract</span><span class="move">Faint Attack</span></div></td><td>약점이 없다. 고화력 중립기, Toxic, Calm Mind 누적이 안정적이다.</td></tr>
+        <tr><td class="trainer">회연</td><td><span class="mon">Dusclops<span class="ko">미라몽 Lv.51</span></span></td><td><div class="moves"><span class="move">Shadow Ball</span><span class="move">Ice Beam</span><span class="move">Confuse Ray</span><span class="move">Earthquake</span></div></td><td>마지막 미라몽은 커버리지가 넓다. 악 특수기로 빨리 끝내거나 특방 탱커로 교대.</td></tr>
+
+        <tr><td class="trainer">미혜<br><span class="lvl">얼음</span></td><td><span class="mon">Glalie<span class="ko">얼음귀신 Lv.50/52</span></span></td><td><div class="moves"><span class="move">Ice Beam</span><span class="move">Crunch</span><span class="move">Hail</span><span class="move">Shadow Ball</span></div></td><td>격투/불꽃/강철. 레어코일은 얼음 반감, 하리뭉은 공격 압박.</td></tr>
+        <tr><td class="trainer">미혜</td><td><span class="mon">Sealeo<span class="ko">씨레오 Lv.50/52</span></span></td><td><div class="moves"><span class="move">Surf</span><span class="move">Body Slam</span><span class="move">Hail</span><span class="move">Blizzard/Dive</span></div></td><td>전기와 풀. Surf 때문에 불꽃/땅 포켓몬은 꺼내지 않는다.</td></tr>
+        <tr><td class="trainer">미혜</td><td><span class="mon">Walrein<span class="ko">씨카이저 Lv.53</span></span></td><td><div class="moves"><span class="move">Surf</span><span class="move">Body Slam</span><span class="move">Blizzard</span><span class="move">Sheer Cold</span></div></td><td>일격기 때문에 장기전 금지. 전기/격투/독으로 빠르게 처리.</td></tr>
+
+        <tr><td class="trainer">권수<br><span class="lvl">드래곤</span></td><td><span class="mon">Shelgon<span class="ko">쉘곤 Lv.52</span></span></td><td><div class="moves"><span class="move">Rock Tomb</span><span class="move">Dragon Claw</span><span class="move">Protect</span><span class="move">Crunch</span></div></td><td>얼음빔으로 처리. Rock Tomb 때문에 비행 의존은 위험하다.</td></tr>
+        <tr><td class="trainer">권수</td><td><span class="mon">Altaria<span class="ko">파비코리 Lv.54</span></span></td><td><div class="moves"><span class="move">Take Down</span><span class="move">Dragon Breath</span><span class="move">Dragon Dance</span><span class="move">Refresh</span></div></td><td>얼음 4배. 용춤 전에 정리해야 한다.</td></tr>
+        <tr><td class="trainer">권수</td><td><span class="mon">Flygon<span class="ko">플라이곤 Lv.53 x2</span></span></td><td><div class="moves"><span class="move">Dig/Fly</span><span class="move">Flamethrower</span><span class="move">Crunch</span><span class="move">Dragon Breath</span></div></td><td>얼음 4배지만 Dig/Fly 턴을 읽어야 한다. Levitate라 땅 기술은 안 통한다.</td></tr>
+        <tr><td class="trainer">권수</td><td><span class="mon">Salamence<span class="ko">보만다 Lv.55</span></span></td><td><div class="moves"><span class="move">Flamethrower</span><span class="move">Dragon Claw</span><span class="move">Fly</span><span class="move">Crunch</span></div></td><td>얼음 4배. 레어코일은 드래곤/비행/악/불꽃을 대부분 버티지만 화염방사는 주의.</td></tr>
+
+        <tr><td class="trainer">스티븐<br><span class="lvl">강철/암석</span></td><td><span class="mon">Skarmory<span class="ko">무장조 Lv.57</span></span></td><td><div class="moves"><span class="move">Toxic</span><span class="move">Aerial Ace</span><span class="move">Spikes</span><span class="move">Steel Wing</span></div></td><td>전기/불꽃. 독과 압정 때문에 선두 처리 가치가 높다.</td></tr>
+        <tr><td class="trainer">스티븐</td><td><span class="mon">Claydol<span class="ko">점토도리 Lv.55</span></span></td><td><div class="moves"><span class="move">Reflect</span><span class="move">Light Screen</span><span class="move">AncientPower</span><span class="move">Earthquake</span></div></td><td>물/풀/얼음/악. 장막 설치 전에 압박하면 이후가 쉬워진다.</td></tr>
+        <tr><td class="trainer">스티븐</td><td><span class="mon">Aggron<span class="ko">보스로라 Lv.56</span></span></td><td><div class="moves"><span class="move">Thunder</span><span class="move">Earthquake</span><span class="move">SolarBeam</span><span class="move">Dragon Claw</span></div></td><td>격투/땅 4배. 단 물 포켓몬은 Thunder/SolarBeam을 의식한다.</td></tr>
+        <tr><td class="trainer">스티븐</td><td><span class="mon">Cradily / Armaldo<span class="ko">릴리요 / 아말도 Lv.56</span></span></td><td><div class="moves"><span class="move">Giga Drain</span><span class="move">AncientPower</span><span class="move">Sludge Bomb</span><span class="move">Water Pulse</span><span class="move">Aerial Ace</span></div></td><td>릴리요는 독/강철/얼음/격투, 아말도는 물/강철/바위. 둘 다 장기전이 귀찮다.</td></tr>
+        <tr><td class="trainer">스티븐</td><td><span class="mon">Metagross<span class="ko">메타그로스 Lv.58</span></span></td><td><div class="moves"><span class="move">Earthquake</span><span class="move">Psychic</span><span class="move">Meteor Mash</span><span class="move">Hyper Beam</span></div></td><td>불꽃/땅이 핵심. 물리 내구가 높아 특수 불꽃, 벌크업 격투 보조가 좋다.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="parties" class="section">
+    <h2>추천 6파티 조합</h2>
+    <div class="grid two">
+      <article class="card party">
+        <div class="party-head"><div><div class="party-title">A. 균형형 비주류 안정 파티</div><div class="party-sub">가장 추천. 사천왕 전체를 고르게 커버하고, 스타팅 없이도 구성 가능.</div></div><div class="rating"><span class="tag">안정성 높음</span><span class="tag warn">TM 투자 큼</span></div></div>
+        <div class="slots">
+          <div class="slot"><div class="name">하리뭉</div><div class="role">시드니, 미혜, 보스로라 압박</div><div class="skill-list"><span class="skill">Brick Break</span><span class="skill">Bulk Up</span><span class="skill">Fake Out</span><span class="skill">Rock Tomb</span></div></div>
+          <div class="slot"><div class="name">샤크니아</div><div class="role">회연, 권수, 스티븐 Claydol 처리</div><div class="skill-list"><span class="skill">Crunch</span><span class="skill">Surf</span><span class="skill">Ice Beam</span><span class="skill">Earthquake</span></div></div>
+          <div class="slot"><div class="name">레어코일</div><div class="role">미혜 물/얼음, 무장조 처리</div><div class="skill-list"><span class="skill">Thunderbolt</span><span class="skill">Shock Wave</span><span class="skill">Reflect</span><span class="skill">Protect</span></div></div>
+          <div class="slot"><div class="name">코터스</div><div class="role">무장조, 메타그로스, 얼음 반감</div><div class="skill-list"><span class="skill">Flamethrower</span><span class="skill">Overheat</span><span class="skill">Body Slam</span><span class="skill">Protect</span></div></div>
+          <div class="slot"><div class="name">점토도리</div><div class="role">장막, 지진 면역, 보조 얼음빔</div><div class="skill-list"><span class="skill">Psychic</span><span class="skill">Ice Beam</span><span class="skill">Earthquake</span><span class="skill">Light Screen</span></div></div>
+          <div class="slot"><div class="name">씨카이저</div><div class="role">권수 전담, 스티븐 바위/땅 대응</div><div class="skill-list"><span class="skill">Ice Beam</span><span class="skill">Surf</span><span class="skill">Body Slam</span><span class="skill">Rest</span></div></div>
+        </div>
+        <div class="why"><b>운용:</b> 하리뭉으로 Sidney를 열고, Phoebe는 샤크니아의 Crunch 중심. Glacia는 레어코일/하리뭉, Drake는 씨카이저/점토도리 Ice Beam, Steven은 코터스+하리뭉+물/땅 커버로 분담한다.</div>
+      </article>
+
+      <article class="card party">
+        <div class="party-head"><div><div class="party-title">B. 사파이어 물/풀 압박 파티</div><div class="party-sub">로파파를 쓰는 사파이어 전용 감성. 물/풀 복합으로 연전 유지력이 좋다.</div></div><div class="rating"><span class="tag">Sapphire</span><span class="tag">유지력 좋음</span></div></div>
+        <div class="slots">
+          <div class="slot"><div class="name">로파파</div><div class="role">Glacia 물 반감, Steven 물/풀 압박</div><div class="skill-list"><span class="skill">Surf</span><span class="skill">Giga Drain</span><span class="skill">Ice Beam</span><span class="skill">Brick Break</span></div></div>
+          <div class="slot"><div class="name">썬더볼트</div><div class="role">Sealeo/Walrein/Skarmory 처리</div><div class="skill-list"><span class="skill">Thunderbolt</span><span class="skill">Shock Wave</span><span class="skill">Thunder</span><span class="skill">Protect</span></div></div>
+          <div class="slot"><div class="name">다크펫</div><div class="role">Phoebe 맞대응, Thunderbolt 보조</div><div class="skill-list"><span class="skill">Shadow Ball</span><span class="skill">Faint Attack</span><span class="skill">Thunderbolt</span><span class="skill">Psychic</span></div></div>
+          <div class="slot"><div class="name">폭타</div><div class="role">Steven 강철, Rock Slide 보조</div><div class="skill-list"><span class="skill">Earthquake</span><span class="skill">Flamethrower</span><span class="skill">Rock Slide</span><span class="skill">Overheat</span></div></div>
+          <div class="slot"><div class="name">하리뭉</div><div class="role">악/얼음/보스로라 대응</div><div class="skill-list"><span class="skill">Brick Break</span><span class="skill">Bulk Up</span><span class="skill">Return</span><span class="skill">Rock Tomb</span></div></div>
+          <div class="slot"><div class="name">얼음귀신</div><div class="role">Drake 전담, Crunch 보조</div><div class="skill-list"><span class="skill">Ice Beam</span><span class="skill">Crunch</span><span class="skill">Light Screen</span><span class="skill">Shadow Ball</span></div></div>
+        </div>
+        <div class="why"><b>주의:</b> 폭타는 Surf에 4배라 Sidney Sharpedo, Glacia, Steven Armaldo 앞에서 꺼내면 안 된다. 대신 Steven의 Aggron/Metagross 상대로는 결정력이 높다.</div>
+      </article>
+
+      <article class="card party">
+        <div class="party-head"><div><div class="party-title">C. 루비 사막/화석 비주류 파티</div><div class="party-sub">밤선인, 아말도, 플라이곤을 중심으로 “흔하지 않은데 역할이 분명한” 조합.</div></div><div class="rating"><span class="tag">Ruby 친화</span><span class="tag warn">운용 난도 중</span></div></div>
+        <div class="slots">
+          <div class="slot"><div class="name">밤선인</div><div class="role">Phoebe 특수 악 딜러, Steven 물/땅 견제</div><div class="skill-list"><span class="skill">Faint Attack</span><span class="skill">Needle Arm</span><span class="skill">Giga Drain</span><span class="skill">Protect</span></div></div>
+          <div class="slot"><div class="name">피그킹</div><div class="role">Light Screen, Calm Mind, 중립 특수딜</div><div class="skill-list"><span class="skill">Psychic</span><span class="skill">Calm Mind</span><span class="skill">Light Screen</span><span class="skill">Shock Wave</span></div></div>
+          <div class="slot"><div class="name">독파리</div><div class="role">특방 탱커, Ice/Surf 담당</div><div class="skill-list"><span class="skill">Surf</span><span class="skill">Ice Beam</span><span class="skill">Giga Drain</span><span class="skill">Toxic</span></div></div>
+          <div class="slot"><div class="name">아말도</div><div class="role">물리 탱커, 악/얼음/스티븐 보조</div><div class="skill-list"><span class="skill">Brick Break</span><span class="skill">Rock Tomb</span><span class="skill">Earthquake</span><span class="skill">Aerial Ace</span></div></div>
+          <div class="slot"><div class="name">플라이곤</div><div class="role">Steven 지진/화염, 전기 면역</div><div class="skill-list"><span class="skill">Earthquake</span><span class="skill">Dragon Claw</span><span class="skill">Flamethrower</span><span class="skill">Crunch</span></div></div>
+          <div class="slot"><div class="name">레어코일</div><div class="role">Glacia/Skarmory 안정 처리</div><div class="skill-list"><span class="skill">Thunderbolt</span><span class="skill">Reflect</span><span class="skill">Shock Wave</span><span class="skill">Protect</span></div></div>
+        </div>
+        <div class="why"><b>운용:</b> Ice Beam 사용자는 독파리 하나라 PP 관리가 중요하다. Drake 전에는 회복/PP 보충을 하고, Flygon은 상대 Ice Beam 앞에 절대 내지 않는다.</div>
+      </article>
+
+      <article class="card party">
+        <div class="party-head"><div><div class="party-title">D. 방어형 장기전 파티</div><div class="party-sub">Cradily, Skarmory, Tentacruel 같은 내구 포켓몬으로 Full Restore 소모를 유도한다.</div></div><div class="rating"><span class="tag">내구 중심</span><span class="tag warn">전투 길어짐</span></div></div>
+        <div class="slots">
+          <div class="slot"><div class="name">릴리요</div><div class="role">Toxic/Protect, 물/전기 중립 탱커</div><div class="skill-list"><span class="skill">Giga Drain</span><span class="skill">Toxic</span><span class="skill">Protect</span><span class="skill">AncientPower</span></div></div>
+          <div class="slot"><div class="name">무장조</div><div class="role">물리 받이, 독/압정식 운영</div><div class="skill-list"><span class="skill">Toxic</span><span class="skill">Aerial Ace</span><span class="skill">Fly</span><span class="skill">Steel Wing</span></div></div>
+          <div class="slot"><div class="name">독파리</div><div class="role">Glacia와 특수기 흡수</div><div class="skill-list"><span class="skill">Surf</span><span class="skill">Ice Beam</span><span class="skill">Sludge Bomb</span><span class="skill">Barrier</span></div></div>
+          <div class="slot"><div class="name">점토도리</div><div class="role">Reflect/Light Screen, 지진 면역</div><div class="skill-list"><span class="skill">Reflect</span><span class="skill">Light Screen</span><span class="skill">Ice Beam</span><span class="skill">Earthquake</span></div></div>
+          <div class="slot"><div class="name">하리뭉</div><div class="role">필요할 때 마무리하는 물리 압박</div><div class="skill-list"><span class="skill">Brick Break</span><span class="skill">Bulk Up</span><span class="skill">Rest</span><span class="skill">Rock Tomb</span></div></div>
+          <div class="slot"><div class="name">앱솔</div><div class="role">Phoebe 빠른 처리, 범용 TM 어태커</div><div class="skill-list"><span class="skill">Shadow Ball</span><span class="skill">Flamethrower</span><span class="skill">Ice Beam</span><span class="skill">Aerial Ace</span></div></div>
+        </div>
+        <div class="why"><b>주의:</b> 독/방어 운영은 Sheer Cold, Dragon Dance, Swords Dance 같은 위험 턴을 허용할 수 있다. Walrein/Salamence/Absol 앞에서는 장기전보다 즉시 처리.</div>
+      </article>
+
+      <article class="card party">
+        <div class="party-head"><div><div class="party-title">E. 저투자 실전 파티</div><div class="party-sub">희귀성은 조금 낮지만 준비 난도가 낮고, 챔피언로드 직전 빠르게 맞추기 쉽다.</div></div><div class="rating"><span class="tag">준비 쉬움</span><span class="tag">실전형</span></div></div>
+        <div class="slots">
+          <div class="slot"><div class="name">패리퍼</div><div class="role">Surf/Fly, Ice Beam 보조</div><div class="skill-list"><span class="skill">Surf</span><span class="skill">Ice Beam</span><span class="skill">Fly</span><span class="skill">Protect</span></div></div>
+          <div class="slot"><div class="name">썬더볼트</div><div class="role">Glacia/Skarmory</div><div class="skill-list"><span class="skill">Thunderbolt</span><span class="skill">Shock Wave</span><span class="skill">Thunder</span><span class="skill">Quick Attack</span></div></div>
+          <div class="slot"><div class="name">코터스</div><div class="role">강철 처리, 얼음 반감</div><div class="skill-list"><span class="skill">Flamethrower</span><span class="skill">Overheat</span><span class="skill">Body Slam</span><span class="skill">Protect</span></div></div>
+          <div class="slot"><div class="name">다크펫</div><div class="role">Phoebe, 보조 전기/에스퍼</div><div class="skill-list"><span class="skill">Shadow Ball</span><span class="skill">Faint Attack</span><span class="skill">Thunderbolt</span><span class="skill">Psychic</span></div></div>
+          <div class="slot"><div class="name">하리뭉</div><div class="role">Sidney/Glacia/Aggron</div><div class="skill-list"><span class="skill">Brick Break</span><span class="skill">Fake Out</span><span class="skill">Bulk Up</span><span class="skill">Return</span></div></div>
+          <div class="slot"><div class="name">얼음귀신</div><div class="role">Drake 전담</div><div class="skill-list"><span class="skill">Ice Beam</span><span class="skill">Crunch</span><span class="skill">Light Screen</span><span class="skill">Protect</span></div></div>
+        </div>
+        <div class="why"><b>운용:</b> 특별히 꼬인 입수 조건이 적다. 단, 물리/특수 내구 밸런스가 A안보다 낮으므로 챔피언전 전 회복 아이템과 PP를 충분히 준비한다.</div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>역할 매트릭스</h2>
+    <table class="matrix">
+      <thead><tr><th>포켓몬</th><th>주요 담당</th><th>받으면 좋은 공격</th><th>피해야 할 공격</th><th>기술표 링크</th></tr></thead>
+      <tbody>
+        <tr><td>하리뭉</td><td><span class="check">Sidney</span>, Glacia Glalie, Steven Aggron</td><td>악/바위/강철 물리</td><td><span class="bad">Extrasensory, Psychic, Aerial Ace</span></td><td><a class="tag" href="ruby-sapphire-move-guide.html#pokemon-HARIYAMA">기술 보기</a></td></tr>
+        <tr><td>샤크니아</td><td><span class="check">Phoebe</span>, Drake 보조, Claydol</td><td>Psychic 무효, Ghost/Dark 반감</td><td><span class="bad">Body Slam, Aerial Ace, Giga Drain</span></td><td><a class="tag" href="ruby-sapphire-move-guide.html#pokemon-SHARPEDO">기술 보기</a></td></tr>
+        <tr><td>레어코일</td><td><span class="check">Glacia</span>, Skarmory, 비행/얼음 반감</td><td>Ice, Flying, Dragon, Steel, Psychic</td><td><span class="bad">Earthquake, Dig, Flamethrower</span></td><td><a class="tag" href="ruby-sapphire-move-guide.html#pokemon-MAGNETON">기술 보기</a></td></tr>
+        <tr><td>코터스</td><td>Skarmory, Metagross, Glalie</td><td>Ice, Steel, Normal 물리</td><td><span class="bad">Surf, Earthquake, Rock Tomb</span></td><td><a class="tag" href="ruby-sapphire-move-guide.html#pokemon-TORKOAL">기술 보기</a></td></tr>
+        <tr><td>점토도리</td><td>Drake 보조, Steven 장막 대응</td><td>Electric 무효, Ground 면역</td><td><span class="bad">Surf, Crunch, Ice Beam, Giga Drain</span></td><td><a class="tag" href="ruby-sapphire-move-guide.html#pokemon-CLAYDOL">기술 보기</a></td></tr>
+        <tr><td>씨카이저</td><td><span class="check">Drake</span>, Steven 바위/땅</td><td>Ice, Water, 일부 물리</td><td><span class="bad">Thunder, Giga Drain, Brick Break</span></td><td><a class="tag" href="ruby-sapphire-move-guide.html#pokemon-WALREIN">기술 보기</a></td></tr>
+        <tr><td>로파파</td><td>Glacia, Steven Claydol/Aggron 보조</td><td>Water 1/4, Ground/Steel 반감</td><td><span class="bad">Aerial Ace, Sludge Bomb</span></td><td><a class="tag" href="ruby-sapphire-move-guide.html#pokemon-LUDICOLO">기술 보기</a></td></tr>
+        <tr><td>폭타</td><td>Steven 강철, 전기 무효</td><td>Electric 무효, Fire/Poison 반감</td><td><span class="bad">Surf 4배, Earthquake</span></td><td><a class="tag" href="ruby-sapphire-move-guide.html#pokemon-CAMERUPT">기술 보기</a></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section grid two">
+    <div class="card">
+      <h2>TM/HM 투자 메모</h2>
+      <p><b>Ice Beam</b>은 Drake 대응의 핵심이라 최소 1-2마리에게 필요하다. 씨카이저, 독파리, 샤크니아, 점토도리, 패리퍼 중 실제 Drake 담당에게 우선 배정한다.</p>
+      <p><b>Thunderbolt</b>은 Glacia의 Sealeo/Walrein과 Steven의 Skarmory를 동시에 본다. 레어코일/썬더볼트/다크펫/앱솔 중 하나에게 우선 준다.</p>
+      <p><b>Earthquake</b>은 Steven전 가치가 높지만 경쟁이 심하다. 하리뭉, 폭타, 플라이곤, 점토도리, 씨카이저 중 실제 Metagross/Aggron 담당에게 준다.</p>
+      <p><b>Brick Break</b>은 Sidney, Glacia Glalie, Steven Aggron에 모두 유효하다. 하리뭉이 있으면 하리뭉 우선, 없으면 아말도/로파파/버섯모에게 배정한다.</p>
+    </div>
+    <div class="card">
+      <h2>연전 운영 원칙</h2>
+      <p><b>Sidney:</b> 명중률 하락, Swagger, Swords Dance를 오래 두지 않는다. 하리뭉/아말도/화염 보조로 빠르게 끊는다.</p>
+      <p><b>Phoebe:</b> Will-O-Wisp 때문에 물리 일변도는 손해다. Crunch, Faint Attack 같은 악 특수기와 중립 특수기로 처리한다.</p>
+      <p><b>Glacia:</b> Walrein의 Sheer Cold는 장기전 금지 신호다. 전기/격투으로 Full Restore를 빼고 마무리한다.</p>
+      <p><b>Drake:</b> Ice Beam PP를 남겨둔다. Altaria/Flygon/Salamence는 얼음 4배라 한 턴 처리 가치가 크다.</p>
+      <p><b>Steven:</b> Skarmory의 Toxic/Spikes, Claydol의 장막을 초반에 막으면 난도가 크게 내려간다.</p>
+    </div>
+  </section>
+
+  <section class="footer">
+    <b>검증 메모:</b> 이 문서는 `pokeruby` 소스 기준의 공략 설계다. 추천 기술은 로컬 기술표에서 합법 습득을 확인했지만, TM은 대부분 1회성이므로 실제 세이브에서 이미 사용했다면 대체 기술을 골라야 한다. 다음 개선 후보는 각 조합별 예상 선출 순서와 PP 소모량 계산이다.
+  </section>
+</main>
+</body>
+</html>
